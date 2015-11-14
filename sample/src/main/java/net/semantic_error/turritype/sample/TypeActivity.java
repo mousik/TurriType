@@ -1,10 +1,14 @@
-package net.semantic_error.turritype;
+package net.semantic_error.turritype.sample;
 
 import android.animation.Animator;
+import android.annotation.TargetApi;
+import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import net.semantic_error.turritype.TurriType;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
