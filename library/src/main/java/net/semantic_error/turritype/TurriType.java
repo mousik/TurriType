@@ -2,6 +2,8 @@ package net.semantic_error.turritype;
 
 import android.animation.Animator;
 import android.animation.TimeInterpolator;
+import android.support.v4.view.animation.FastOutLinearInInterpolator;
+import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
@@ -87,8 +89,8 @@ public class TurriType {
 
             naturalWordInterpolatorList.add(new AccelerateDecelerateInterpolator()); // This one works best so far
             naturalWordInterpolatorList.add(new DecelerateInterpolator());
-//            naturalWordInterpolatorList.add(new FastOutSlowInInterpolator());
-//            naturalWordInterpolatorList.add(new FastOutLinearInInterpolator());
+            naturalWordInterpolatorList.add(new FastOutSlowInInterpolator());
+            naturalWordInterpolatorList.add(new FastOutLinearInInterpolator());
             naturalWordInterpolatorList.add(new LinearInterpolator());
 
             return this.setPauseStrategy(new NaturalPauseStrategy()).withWordInterpolator(naturalWordInterpolatorList);

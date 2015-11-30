@@ -60,7 +60,9 @@ public class TypeAnimationFactory {
             }
 
             AnimatorSet animator = new AnimatorSet();
-            animator.addListener(wr.animatorListener);
+            if (wr.animatorListener != null) {
+                animator.addListener(wr.animatorListener);
+            }
             animator.playSequentially(animatorList);
             return animator;
 
