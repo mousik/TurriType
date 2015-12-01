@@ -1,8 +1,6 @@
 package net.semantic_error.turritype.sample;
 
 import android.animation.Animator;
-import android.annotation.TargetApi;
-import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
@@ -53,7 +51,7 @@ public class TypeActivity extends AppCompatActivity {
 
         anim = TurriType.write(text)
                 .naturally()
-                .during(TurriType.FAST_SPEED)
+                .speed(TurriType.FAST_SPEED)
                 .withListener(listener)
                 .into(myTextView);
     }

@@ -2,6 +2,9 @@ package net.semantic_error.turritype;
 
 import android.animation.Animator;
 import android.animation.TimeInterpolator;
+import android.support.annotation.IntRange;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.view.animation.FastOutLinearInInterpolator;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -28,10 +31,15 @@ public class TurriType {
     public static final int FAST_SPEED = 50;
     public static final int VERY_FAST_SPEED = 25;
 
+    @NonNull
     public static WriteRequest write(String text) {
+        return getDefaultWriteRequest(text);
+    }
+
+    @NonNull
+    private static WriteRequest getDefaultWriteRequest(String text) {
         List<TimeInterpolator> defaultWordInterpolatorList = new ArrayList<>();
         defaultWordInterpolatorList.add(new LinearInterpolator());
-
         return new WriteRequest(text, NORMAL_SPEED, null, defaultWordInterpolatorList, null, new NoPauseStrategy());
     }
 
@@ -46,7 +54,12 @@ public class TurriType {
         final PauseStrategy pauseStrategy;
 
 
-        private WriteRequest(String text, long avgTimePerChar, TimeInterpolator interpolator, List<TimeInterpolator> wordInterpolatorList, Animator.AnimatorListener animatorListener, PauseStrategy pauseStrategy) {
+        private WriteRequest(@NonNull String text,
+                             long avgTimePerChar,
+                             @Nullable TimeInterpolator interpolator,
+                             @NonNull List<TimeInterpolator> wordInterpolatorList,
+                             @Nullable Animator.AnimatorListener animatorListener,
+                             @NonNull PauseStrategy pauseStrategy) {
 
             this.text = text;
             this.avgTimePerChar = avgTimePerChar;
@@ -56,8 +69,7 @@ public class TurriType {
             this.pauseStrategy = pauseStrategy;
         }
 
-        // TODO rename to reflect that it is millisecond per char not total animation time
-        public WriteRequest during(long millis) {
+        public WriteRequest speed(long millis) {
             return new WriteRequest(text, millis, interpolator, wordInterpolatorList, animatorListener, pauseStrategy);
         }
 

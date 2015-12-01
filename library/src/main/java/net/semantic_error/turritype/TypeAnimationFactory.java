@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.TimeInterpolator;
 import android.animation.ValueAnimator;
+import android.util.Log;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -13,6 +14,8 @@ import java.util.List;
  * Created by semanticer on 10. 11. 2015.
  */
 public class TypeAnimationFactory {
+
+    private static final String TAG = TypeAnimationFactory.class.getSimpleName();
 
     // TODO refactor this method
     static Animator create(final TurriType.WriteRequest wr, final TextView tv) {
@@ -73,6 +76,8 @@ public class TypeAnimationFactory {
 
     private static ValueAnimator createAddTextAnimation(final TextView tv, final String text, final long duration, final TimeInterpolator interpolator) {
 
+        Log.d(TAG, "createAddTextAnimation() called with: " + "tv = [" + tv + "], text = [" + text + "], duration = [" + duration + "], interpolator = [" + interpolator + "]");
+
         ValueAnimator animator = ValueAnimator.ofInt(1, text.length());
         animator.setDuration(duration);
         animator.setInterpolator(interpolator);
@@ -89,6 +94,8 @@ public class TypeAnimationFactory {
                 lastIndex = index;
             }
         });
+
+        Log.d(TAG, "createAddTextAnimation() returned: " + animator);
 
         return animator;
     }
