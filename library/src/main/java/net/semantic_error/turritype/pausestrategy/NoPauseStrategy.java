@@ -1,16 +1,18 @@
 package net.semantic_error.turritype.pausestrategy;
 
+import java.util.List;
+
 /**
  * Created by semanticer on 10. 11. 2015.
  */
 public class NoPauseStrategy implements PauseStrategy {
     @Override
-    public long getPauseBeforeWord(String[] wordList, int currentWordIndex, long millsPerChar) {
+    public long getPauseAfterWord(String word, long millsPerChar) {
         return 0;
     }
 
     @Override
-    public long getPauseAfterSentence(String[] wordList, int currentWordIndex, long millsPerChar) {
+    public long getPauseAfterSentence(long millsPerChar) {
         return 0;
     }
 }
