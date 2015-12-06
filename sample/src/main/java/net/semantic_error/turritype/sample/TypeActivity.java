@@ -7,6 +7,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import net.semantic_error.turritype.TurriType;
+import net.semantic_error.turritype.pausestrategy.LinearPauseStrategy;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -49,10 +50,12 @@ public class TypeActivity extends AppCompatActivity {
 
         final String text = getString(R.string.lorem_ipsum);
 
+//        myTextView.setText(text);
         anim = TurriType.write(text)
-                .naturally()
+//                .naturally()
                 .speed(TurriType.FAST_SPEED)
                 .withListener(listener)
+                .setPauseStrategy(new LinearPauseStrategy(1000, 3000))
                 .into(myTextView);
     }
 

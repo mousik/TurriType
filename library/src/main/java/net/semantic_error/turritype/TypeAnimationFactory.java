@@ -27,52 +27,64 @@ public class TypeAnimationFactory {
 
         }
         // create set of animations for every word one with interpolator
-        else if( wr.wordInterpolatorList != null) {
+        else if( wr.wordInterpolatorList != null && wr.wordInterpolatorList.size() > 0) {
 
-
-            // TODO this removes multiple spaces and replaces them with single space
-            // TODO Implement better split, not removing anything just separating to array
-            String[] words = wr.text.split(" ");
+            String wordBuffer = "";
+            char prevCh = '|';
+            long pauseAfterPrevPart = 0;
             List<Animator> animatorList = new ArrayList<>();
-            String lastWord = " ";
-            for (int i = 0; i < words.length; i++) {
 
-                String word = words[i];
-                String wordWithSpc = word + " ";
+            for (int i = 0; i < wr.text.length(); i++) {
 
-                ValueAnimator wordAnimation = createAddTextAnimation(
-                        tv,
-                        wordWithSpc,
-                        wordWithSpc.length() * wr.avgTimePerChar,
-                        wr.getRandomWordInterpolator());
+                // get current letter and add it to wordBuffer
+                char ch = wr.text.charAt(i);
+                wordBuffer = wordBuffer + ch;
 
-                long pause = 0;
+                // if this is end of the word (and not just a long chain of spaces) we want to
+                // create animation for this word
+                if (ch == ' ' && prevCh != ' ') {
 
-                // natural random pauses after sentences
-                if (lastWord.charAt(lastWord.length()-1) == '.' || lastWord.charAt(lastWord.length()-1) == ','){
-                    pause = wr.pauseStrategy.getPauseAfterSentence(words, i, wr.avgTimePerChar);
+                    ValueAnimator wordAnimation = createAddTextAnimation(
+                            tv,
+                            wordBuffer,
+                            wordBuffer.length() * wr.avgTimePerChar,
+                            wr.getRandomWordInterpolator());
+
+                    // add possible delays from the previous word or sentence
+                    wordAnimation.setStartDelay(pauseAfterPrevPart);
+                    animatorList.add(wordAnimation);
+
+                    // get relevant pause after this word. If it was the end of the sentence then prefer sentence pause
+                    // save this pause for next animation's setStartDelay
+                    if (prevCh == '.' || prevCh == ','){
+                        pauseAfterPrevPart = wr.pauseStrategy.getPauseAfterSentence(wr.avgTimePerChar);
+                    } else {
+                        String wordWithoutLastSpace = wordBuffer.substring(0, wordBuffer.length() - 2);
+                        Log.d("TAG", wordWithoutLastSpace);
+                        pauseAfterPrevPart = wr.pauseStrategy.getPauseAfterWord(wordWithoutLastSpace, wr.avgTimePerChar);
+                    }
+
+                    wordBuffer = ""; // prepare buffer for next word
                 }
-                // and after words
-                else {
-                    pause = wr.pauseStrategy.getPauseBeforeWord(words, i, wr.avgTimePerChar);
-                }
 
-                wordAnimation.setStartDelay(pause);
-                lastWord = word;
-                animatorList.add(wordAnimation);
+                prevCh = ch;
             }
+
+
 
             AnimatorSet animator = new AnimatorSet();
             if (wr.animatorListener != null) {
                 animator.addListener(wr.animatorListener);
             }
+
             animator.playSequentially(animatorList);
             return animator;
-
-        } else {
-            throw new IllegalArgumentException("No interpolator for the animation available");
         }
+
+        throw new IllegalArgumentException("No interpolator or interpolator list specified");
     }
+
+
 
     private static ValueAnimator createAddTextAnimation(final TextView tv, final String text, final long duration, final TimeInterpolator interpolator) {
 
@@ -99,4 +111,5 @@ public class TypeAnimationFactory {
 
         return animator;
     }
+
 }

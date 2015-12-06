@@ -87,7 +87,7 @@ public class TurriType {
             return new WriteRequest(text, avgTimePerChar, null, wordInterpolatorList, animatorListener, pauseStrategy);
         }
 
-        public WriteRequest withWordInterpolator(@NonNull List<TimeInterpolator> wordInterpolatorList) {
+        public WriteRequest withWordInterpolator(@Size(min = 1) List<TimeInterpolator> wordInterpolatorList) {
             return new WriteRequest(text, avgTimePerChar, null, wordInterpolatorList, animatorListener, pauseStrategy);
         }
 
