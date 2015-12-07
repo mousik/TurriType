@@ -2,7 +2,11 @@ TurriType
 ========
 
 A small android library which allows you to write text to your TextView gradually. You can easily customise
-typing process with fluent API. 
+typing process with fluent API. TurriType uses standard android animation APIs to work seamlessly with rest
+of your code.
+
+TurriType is named after [Pellegrino Turri][turri] an Italian who invented on of the first typewrites for his
+blind lover Countess Carolina Fantoni da Fivizzano.
 
 
 Download
@@ -32,4 +36,5 @@ License
     limitations under the License.
 
 
+ [turri]: https://en.wikipedia.org/wiki/Pellegrino_Turri
  [snap]: https://oss.sonatype.org/content/repositories/snapshots/
