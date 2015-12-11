@@ -5,9 +5,45 @@ A small android library which allows you to write text to your TextView graduall
 typing process with fluent API. TurriType uses standard android animation APIs to work seamlessly with rest
 of your code.
 
-TurriType is named after [Pellegrino Turri][turri] an Italian who invented on of the first typewrites for his
+TurriType is named after [Pellegrino Turri][turri] an Italian who invented one of the first typewrites for his
 blind lover Countess Carolina Fantoni da Fivizzano.
 
+Usage
+-----
+
+You can just use very simple fluent API to write some text to your TextView.
+
+```java
+
+```
+
+The good thing about this is that `TurriType` returns just standard android animation so you can 
+combine/chain with your other animations or do whatever you do with other animations.
+
+```java
+
+```
+
+There are two ways to apply interpolator to your animation. You can define one interpolator for
+the whole writing or you can specify a list of "word interpolators" and TurriType will apply random 
+interpolator from your list to every word to create a little more human like writing.
+
+```java
+
+```
+
+Or you can just use convenient method `naturally()` to use random word interpolators.
+
+```java
+
+```
+
+Naturally also applies custom `PauseStrategy`. You can also define your own pause strategy `PauseStrategy`
+to specify pauses after words and after sentences.
+
+```java
+
+```
 
 Download
 --------
@@ -16,7 +52,6 @@ Download
 compile 'com.github.semanticer:turritype:0.0.2'
 ```
 
-Snapshots of the development version are available in [Sonatype's `snapshots` repository][snap].
 
 
 
@@ -37,4 +72,3 @@ License
 
 
  [turri]: https://en.wikipedia.org/wiki/Pellegrino_Turri
- [snap]: https://oss.sonatype.org/content/repositories/snapshots/
