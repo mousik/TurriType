@@ -3,6 +3,7 @@ package net.semantic_error.turritype.sample;
 import android.animation.Animator;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,6 +19,7 @@ public class TypeActivity extends AppCompatActivity {
     private Animator anim;
 
     @Bind(R.id.text_view) TextView myTextView;
+    @Bind(R.id.is_naturally) Switch isNaturally;
 
     Animator.AnimatorListener listener = new Animator.AnimatorListener() {
         @Override
@@ -50,13 +52,16 @@ public class TypeActivity extends AppCompatActivity {
 
         final String text = getString(R.string.lorem_ipsum);
 
-//        myTextView.setText(text);
-        anim = TurriType.write(text)
-//                .naturally()
+        TurriType.WriteRequest wr = TurriType.write(text)
                 .speed(TurriType.FAST_SPEED)
-                .withListener(listener)
-                .setPauseStrategy(new LinearPauseStrategy(1000, 3000))
-                .into(myTextView);
+                .withListener(listener);
+
+        if (isNaturally.isChecked()) {
+            wr = wr.naturally();
+        }
+
+        anim = wr.into(myTextView);
+
     }
 
     @OnClick(R.id.start_btn)

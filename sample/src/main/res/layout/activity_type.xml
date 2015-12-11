@@ -9,13 +9,13 @@
 
     <TextView
         android:id="@+id/text_view"
-        android:textSize="21sp"
+        android:textSize="18sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/resume_btn"
         android:layout_alignParentTop="true"
         android:layout_alignEnd="@+id/end_btn"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_above="@+id/end_btn" />
 
     <Button
         android:layout_width="wrap_content"
@@ -57,5 +57,17 @@
         android:id="@+id/resume_btn"
         android:layout_above="@+id/pause_btn"
         android:layout_alignEnd="@+id/pause_btn" />
+
+    <Switch
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Naturally"
+        android:id="@+id/is_naturally"
+        android:layout_alignParentStart="true"
+        android:layout_toStartOf="@+id/resume_btn"
+        android:layout_above="@+id/start_btn"
+        android:layout_alignTop="@+id/resume_btn"
+        android:checked="false"
+        android:layout_marginRight="12dp" />
 
 </RelativeLayout>
