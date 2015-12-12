@@ -1,4 +1,20 @@
+/*
+ * Copyright (C) 2015 Tomáš Valenta
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package net.semantic_error.turritype;
+
 
 import android.animation.Animator;
 import android.animation.TimeInterpolator;
@@ -22,7 +38,8 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * Created by semanticer on 10. 11. 2015.
+ * Main class of the library. It's write method is the only way to create WriteRequest
+ * and it also holds useful public constants
  */
 public class TurriType {
 
@@ -32,17 +49,23 @@ public class TurriType {
     public static final int FAST_SPEED = 50;
     public static final int VERY_FAST_SPEED = 25;
 
-    public static WriteRequest write(String text) {
+    /**
+     * @param text text you want to be written into TextView
+     * @return write request with default settings - with NORMAL_SPEED, new LinearInterpolator() and NoPauseStrategy
+     */
+    public static WriteRequest write(@NonNull String text) {
         return getDefaultWriteRequest(text);
     }
 
-    private static WriteRequest getDefaultWriteRequest(String text) {
-        List<TimeInterpolator> defaultWordInterpolatorList = new ArrayList<>();
-        defaultWordInterpolatorList.add(new LinearInterpolator());
-        return new WriteRequest(text, NORMAL_SPEED, null, defaultWordInterpolatorList, null, new NoPauseStrategy());
+    private static WriteRequest getDefaultWriteRequest(@NonNull String text) {
+        checkNotNull(text, "text == null");
+        return new WriteRequest(text, NORMAL_SPEED, new LinearInterpolator(), null, null, new NoPauseStrategy());
     }
 
 
+    /**
+     * This class is works as a specification for future writing animation creation
+     */
     public static class WriteRequest {
 
         final String text;
@@ -55,10 +78,14 @@ public class TurriType {
 
         private WriteRequest(@NonNull String text,
                              @IntRange(from=1) long avgTimePerChar,
-                             @Nullable TimeInterpolator interpolator,
-                             @NonNull List<TimeInterpolator> wordInterpolatorList,
+                             @NonNull TimeInterpolator interpolator,
+                             @Nullable List<TimeInterpolator> wordInterpolatorList,
                              @Nullable Animator.AnimatorListener animatorListener,
                              @NonNull PauseStrategy pauseStrategy) {
+
+            checkNotNull(text, "text == null");
+            checkNotNull(interpolator, "interpolator == null");
+            checkNotNull(pauseStrategy, "pauseStrategy == null");
 
             this.text = text;
             this.avgTimePerChar = avgTimePerChar;
@@ -68,30 +95,50 @@ public class TurriType {
             this.pauseStrategy = pauseStrategy;
         }
 
+        /**
+         * Sets speed of the animation
+         * @param avgMillisPerChar set average time for single character to appear. Because of the
+         *                         interpolation every char appearance differs
+         * @return new WriteRequest with new speed
+         */
         public WriteRequest speed(@IntRange(from=1) long avgMillisPerChar) {
             return new WriteRequest(text, avgMillisPerChar, interpolator, wordInterpolatorList, animatorListener, pauseStrategy);
         }
 
 
+        /**
+         *
+         * @param animatorListener
+         * @return
+         */
         public WriteRequest withListener(@NonNull Animator.AnimatorListener animatorListener) {
+            checkNotNull(animatorListener, "animatorListener == null");
             return new WriteRequest(text, avgTimePerChar, interpolator, wordInterpolatorList, animatorListener, pauseStrategy);
         }
 
         public WriteRequest withInterpolator(@NonNull TimeInterpolator interpolator) {
+            checkNotNull(interpolator, "interpolator == null");
             return new WriteRequest(text, avgTimePerChar, interpolator, new ArrayList<TimeInterpolator>(), animatorListener, pauseStrategy);
         }
 
         public WriteRequest withWordInterpolator(@NonNull TimeInterpolator wordInterpolator) {
+            checkNotNull(wordInterpolator, "wordInterpolator == null");
+
             List<TimeInterpolator> wordInterpolatorList = new ArrayList<>();
             wordInterpolatorList.add(wordInterpolator);
             return new WriteRequest(text, avgTimePerChar, null, wordInterpolatorList, animatorListener, pauseStrategy);
         }
 
-        public WriteRequest withWordInterpolator(@Size(min = 1) List<TimeInterpolator> wordInterpolatorList) {
+        public WriteRequest withWordInterpolatorList(@Size(min = 1) List<TimeInterpolator> wordInterpolatorList) {
+            checkNotNull(wordInterpolatorList, "wordInterpolatorList == null");
+            if (wordInterpolatorList.size() > 0) {
+                throw new IllegalArgumentException("wordInterpolatorList.size() must be > 0");
+            }
             return new WriteRequest(text, avgTimePerChar, null, wordInterpolatorList, animatorListener, pauseStrategy);
         }
 
         public Animator into(@NonNull TextView tv) {
+            checkNotNull(tv, "tv == null");
             return TypeAnimationFactory.create(this, tv);
         }
 
@@ -105,14 +152,17 @@ public class TurriType {
             naturalWordInterpolatorList.add(new FastOutLinearInInterpolator());
             naturalWordInterpolatorList.add(new LinearInterpolator());
 
-            return this.setPauseStrategy(new NaturalPauseStrategy()).withWordInterpolator(naturalWordInterpolatorList);
+            return this.setPauseStrategy(new NaturalPauseStrategy()).withWordInterpolatorList(naturalWordInterpolatorList);
         }
 
-        public WriteRequest setPauseStrategy(PauseStrategy pauseStrategy) {
+        public WriteRequest setPauseStrategy(@NonNull PauseStrategy pauseStrategy) {
+            checkNotNull(pauseStrategy, "pauseStrategy == null");
+
             return new WriteRequest(text, avgTimePerChar, interpolator, wordInterpolatorList, animatorListener, pauseStrategy);
         }
 
 
+        @NonNull
         TimeInterpolator getRandomWordInterpolator() {
             if (wordInterpolatorList == null || wordInterpolatorList.size() == 0) {
                 throw new IllegalStateException("No word interpolator available");
@@ -127,5 +177,12 @@ public class TurriType {
             }
         }
 
+    }
+
+
+    private static void checkNotNull(@Nullable Object object, String message) {
+        if (object == null) {
+            throw new NullPointerException(message);
+        }
     }
 }
