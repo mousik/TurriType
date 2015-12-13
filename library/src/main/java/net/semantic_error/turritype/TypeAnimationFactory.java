@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by semanticer on 10. 11. 2015.
+ * TypeAnimationFactory transforms WriteRequest in to Animator
  */
 public class TypeAnimationFactory {
 
@@ -37,7 +37,7 @@ public class TypeAnimationFactory {
      *
      * @param wr WriteRequest for which we want to create Animation
      * @param tv TextView where we want our animation to write
-     * @return
+     * @return Animator based on WriteRequest blueprint
      */
     static Animator create(final TurriType.WriteRequest wr, final TextView tv) {
 

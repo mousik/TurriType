@@ -64,7 +64,7 @@ public class TurriType {
 
 
     /**
-     * This class is works as a specification for future writing animation creation
+     * This class works as a specification for future writing animation creation
      */
     public static class WriteRequest {
 
@@ -107,20 +107,27 @@ public class TurriType {
 
 
         /**
-         *
-         * @param animatorListener
-         * @return
+         * @param animatorListener animation listener
+         * @return new WriteRequest with animatorListener
          */
         public WriteRequest withListener(@NonNull Animator.AnimatorListener animatorListener) {
             checkNotNull(animatorListener, "animatorListener == null");
             return new WriteRequest(text, avgTimePerChar, interpolator, wordInterpolatorList, animatorListener, pauseStrategy);
         }
 
+        /**
+         * @param interpolator interpolator fo the whole animation
+         * @return new WriteRequest with interpolator
+         */
         public WriteRequest withInterpolator(@NonNull TimeInterpolator interpolator) {
             checkNotNull(interpolator, "interpolator == null");
             return new WriteRequest(text, avgTimePerChar, interpolator, new ArrayList<TimeInterpolator>(), animatorListener, pauseStrategy);
         }
 
+        /**
+         * @param wordInterpolator interpolator applied to every single word
+         * @return new WriteRequest with wordInterpolator
+         */
         public WriteRequest withWordInterpolator(@NonNull TimeInterpolator wordInterpolator) {
             checkNotNull(wordInterpolator, "wordInterpolator == null");
 
@@ -129,6 +136,10 @@ public class TurriType {
             return new WriteRequest(text, avgTimePerChar, null, wordInterpolatorList, animatorListener, pauseStrategy);
         }
 
+        /**
+         * @param wordInterpolatorList list of interpolator for use on individual word animations
+         * @return new WriteRequest with wordInterpolatorList
+         */
         public WriteRequest withWordInterpolatorList(@Size(min = 1) List<TimeInterpolator> wordInterpolatorList) {
             checkNotNull(wordInterpolatorList, "wordInterpolatorList == null");
             if (wordInterpolatorList.size() > 0) {
@@ -137,12 +148,12 @@ public class TurriType {
             return new WriteRequest(text, avgTimePerChar, null, wordInterpolatorList, animatorListener, pauseStrategy);
         }
 
-        public Animator into(@NonNull TextView tv) {
-            checkNotNull(tv, "tv == null");
-            return TypeAnimationFactory.create(this, tv);
-        }
 
-
+        /**
+         * Convenient method for setting set of word interpolators and NaturalPauseStrategy
+         * to mimic random chaotic human-like tiping
+         * @return new WriteRequest
+         */
         public WriteRequest naturally() {
             ArrayList<TimeInterpolator> naturalWordInterpolatorList = new ArrayList<>();
 
@@ -155,12 +166,25 @@ public class TurriType {
             return this.setPauseStrategy(new NaturalPauseStrategy()).withWordInterpolatorList(naturalWordInterpolatorList);
         }
 
+        /**
+         *
+         * @param pauseStrategy custom pause strategy to be used during the animation for brakes betwen words and sentences
+         * @return new WriteRequest with your strategy
+         */
         public WriteRequest setPauseStrategy(@NonNull PauseStrategy pauseStrategy) {
             checkNotNull(pauseStrategy, "pauseStrategy == null");
 
             return new WriteRequest(text, avgTimePerChar, interpolator, wordInterpolatorList, animatorListener, pauseStrategy);
         }
 
+        /**
+         * @param tv TextView where you want to put your text
+         * @return new Animator created for your WriteRequest
+         */
+        public Animator into(@NonNull TextView tv) {
+            checkNotNull(tv, "tv == null");
+            return TypeAnimationFactory.create(this, tv);
+        }
 
         @NonNull
         TimeInterpolator getRandomWordInterpolator() {

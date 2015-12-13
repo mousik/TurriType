@@ -18,7 +18,7 @@ package net.semantic_error.turritype.pausestrategy;
 import java.util.List;
 
 /**
- * Created by semanticer on 10. 11. 2015.
+ * Default implementation of PauseStrategy with no pauses specified at all
  */
 public class NoPauseStrategy implements PauseStrategy {
     @Override

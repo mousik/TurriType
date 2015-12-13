@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * Created by semanticer on 10. 11. 2015.
+ * Pause strategy with some random pauses to imitate human like writing
  */
 public class NaturalPauseStrategy implements PauseStrategy {
 

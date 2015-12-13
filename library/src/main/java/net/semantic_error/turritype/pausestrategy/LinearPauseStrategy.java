@@ -18,13 +18,18 @@ package net.semantic_error.turritype.pausestrategy;
 
 
 /**
- * Created by semanticer on 6. 12. 2015.
+ * Implementation of PauseStrategy with linear pauses after words and sentences
+ * so it will make the same pause after every word and some other pause after every sentence
  */
 public class LinearPauseStrategy implements PauseStrategy {
 
     private final long pauseAfterWord;
     private final long pauseAfterSentence;
 
+    /**
+     * @param pauseAfterWord pause to be made after every word in milliseconds
+     * @param pauseAfterSentence pause to be made after every sentence in milliseconds
+     */
     public LinearPauseStrategy(long pauseAfterWord, long pauseAfterSentence) {
         this.pauseAfterWord = pauseAfterWord;
         this.pauseAfterSentence = pauseAfterSentence;

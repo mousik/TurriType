@@ -18,9 +18,20 @@ package net.semantic_error.turritype.pausestrategy;
 import java.util.List;
 
 /**
- * Created by semanticer on 10. 11. 2015.
+ * Interface for defining extra pauses during writing animations
  */
 public interface PauseStrategy {
+
+    /**
+     * @param word word after which you specify pause
+     * @param millsPerChar speed of current animation. Average milliseconds per char.
+     * @return pause in millisecond to be made in animation after word.
+     */
     long getPauseAfterWord(String word, long millsPerChar);
+
+    /**
+     * @param millsPerChar speed of current animation. Average milliseconds per char.
+     * @return pause in millisecond to be made in animation after sentence
+     */
     long getPauseAfterSentence(long millsPerChar);
 }
