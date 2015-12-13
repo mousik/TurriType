@@ -14,19 +14,23 @@ Usage
 You can just use very simple fluent API to write some text to your TextView.
 
 ```java
-
+TurriType.write(text).into(textView);
 ```
 
-The good thing about this is that `TurriType` returns just standard android animation so you can 
-combine/chain with your other animations or do whatever you do with other animations.
+The good thing about this is that `TurriType` returns just standard android animator so you can 
+combine/chain with your other animations or do whatever you do with other animator.
 
 ```java
-
+Animator animator = TurriType.write(text).into(textView);
+Animator otherAnimator = // ...
+    
+AnimatorSet animatorSet = new AnimatorSet();
+animatorSet.playSequentially(animator, otherAnimator);
 ```
 
 There are two ways to apply interpolator to your animation. You can define one interpolator for
 the whole writing or you can specify a list of "word interpolators" and TurriType will apply random 
-interpolator from your list to every word to create a little more human like writing.
+interpolator from your list to every word in order to create a little more human like writing.
 
 ```java
 
