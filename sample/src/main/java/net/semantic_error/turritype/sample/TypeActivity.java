@@ -18,16 +18,14 @@ package net.semantic_error.turritype.sample;
 import android.animation.Animator;
 import android.animation.TimeInterpolator;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
+import android.support.v4.view.animation.LinearOutSlowInInterpolator;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 import android.widget.CompoundButton;
-import android.widget.RadioGroup;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,7 +35,6 @@ import net.semantic_error.turritype.pausestrategy.NaturalPauseStrategy;
 import net.semantic_error.turritype.pausestrategy.NoPauseStrategy;
 import net.semantic_error.turritype.pausestrategy.PauseStrategy;
 
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,7 +47,7 @@ public class TypeActivity extends AppCompatActivity {
 
     private Animator anim;
 
-    @Bind(R.id.text_view) TextView myTextView;
+    @Bind(R.id.text_view) TextView textView;
     @Bind(R.id.detail_settings) ViewGroup detailSettings;
 
     Animator.AnimatorListener toastListener = new Animator.AnimatorListener() {
@@ -110,7 +107,7 @@ public class TypeActivity extends AppCompatActivity {
             }
         }
 
-        anim = wr.into(myTextView);
+        anim = wr.into(textView);
     }
 
 
@@ -201,7 +198,7 @@ public class TypeActivity extends AppCompatActivity {
     @OnClick(R.id.start_btn)
     public void onStartBtnClicked() {
         // temporary fix when starting animation again
-        myTextView.setText("");
+        textView.setText("");
         anim.start();
     }
 
