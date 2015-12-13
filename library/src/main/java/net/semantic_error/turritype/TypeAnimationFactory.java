@@ -29,28 +29,27 @@ import java.util.List;
 /**
  * TypeAnimationFactory transforms WriteRequest in to Animator
  */
-public class TypeAnimationFactory {
+class TypeAnimationFactory {
 
     private static final String TAG = TypeAnimationFactory.class.getSimpleName();
 
     /**
-     *
      * @param wr WriteRequest for which we want to create Animation
-     * @param tv TextView where we want our animation to write
+     * @param writable TextView where we want our animation to write
      * @return Animator based on WriteRequest blueprint
      */
-    static Animator create(final TurriType.WriteRequest wr, final TextView tv) {
+    static Animator create(final TurriType.WriteRequest wr, final TurriType.Writable writable) {
 
         // create one animation for whole text with singe interpolator
         if (wr.interpolator != null) {
 
-            return createAddTextAnimation(tv, wr.text, wr.text.length() * wr.avgTimePerChar, wr.interpolator);
+            return createAddTextAnimation(writable, wr.text, wr.text.length() * wr.avgTimePerChar, wr.interpolator);
 
         }
         // create set of animations for every word one with interpolator
         else if( wr.wordInterpolatorList != null && wr.wordInterpolatorList.size() > 0) {
 
-            List<Animator> animatorList = createAddTextAnimationList(wr, tv);
+            List<Animator> animatorList = createAddTextAnimationList(wr, writable);
             
             AnimatorSet animator = new AnimatorSet();
             if (wr.animatorListener != null) {
@@ -65,7 +64,7 @@ public class TypeAnimationFactory {
     }
 
     @NonNull
-    private static List<Animator> createAddTextAnimationList(TurriType.WriteRequest wr, TextView tv) {
+    private static List<Animator> createAddTextAnimationList(TurriType.WriteRequest wr, final TurriType.Writable writable) {
         String wordBuffer = "";
         char prevCh = '|';
         long pauseAfterPrevPart = 0;
@@ -82,7 +81,7 @@ public class TypeAnimationFactory {
             if (ch == ' ' && prevCh != ' ') {
 
                 ValueAnimator wordAnimation = createAddTextAnimation(
-                        tv,
+                        writable,
                         wordBuffer,
                         wordBuffer.length() * wr.avgTimePerChar,
                         wr.getRandomWordInterpolator());
@@ -110,9 +109,9 @@ public class TypeAnimationFactory {
     }
 
 
-    private static ValueAnimator createAddTextAnimation(final TextView tv, final String text, final long duration, final TimeInterpolator interpolator) {
+    private static ValueAnimator createAddTextAnimation(final TurriType.Writable writable, final String text, final long duration, final TimeInterpolator interpolator) {
 
-        Log.d(TAG, "createAddTextAnimation() called with: " + "tv = [" + tv + "], text = [" + text + "], duration = [" + duration + "], interpolator = [" + interpolator + "]");
+        Log.d(TAG, "createAddTextAnimation() called with: " + "writable = [" + writable + "], text = [" + text + "], duration = [" + duration + "], interpolator = [" + interpolator + "]");
 
         ValueAnimator animator = ValueAnimator.ofInt(1, text.length());
         animator.setDuration(duration);
@@ -125,7 +124,8 @@ public class TypeAnimationFactory {
             public void onAnimationUpdate(ValueAnimator animation) {
                 int index = (int) animation.getAnimatedValue();
                 if (index != lastIndex) {
-                    tv.append(text, lastIndex, index);
+                    String textToAdd = text.substring(lastIndex, index);
+                    writable.append(textToAdd);
                 }
                 lastIndex = index;
             }

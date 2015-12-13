@@ -43,8 +43,8 @@ import java.util.Random;
  */
 public class TurriType {
 
-    public static final int VERY_SLOW_SPEED = 300;
-    public static final int SLOW_SPEED = 200;
+    public static final int VERY_SLOW_SPEED = 280;
+    public static final int SLOW_SPEED = 150;
     public static final int NORMAL_SPEED = 100;
     public static final int FAST_SPEED = 50;
     public static final int VERY_FAST_SPEED = 25;
@@ -78,14 +78,17 @@ public class TurriType {
 
         private WriteRequest(@NonNull String text,
                              @IntRange(from=1) long avgTimePerChar,
-                             @NonNull TimeInterpolator interpolator,
+                             @Nullable TimeInterpolator interpolator,
                              @Nullable List<TimeInterpolator> wordInterpolatorList,
                              @Nullable Animator.AnimatorListener animatorListener,
                              @NonNull PauseStrategy pauseStrategy) {
 
             checkNotNull(text, "text == null");
-            checkNotNull(interpolator, "interpolator == null");
             checkNotNull(pauseStrategy, "pauseStrategy == null");
+            // only one type of interpolator can be specified
+            if (!(interpolator != null ^ wordInterpolatorList != null)) {
+                throw new IllegalArgumentException("Only one type of interpolator can be specified");
+            }
 
             this.text = text;
             this.avgTimePerChar = avgTimePerChar;
@@ -121,7 +124,7 @@ public class TurriType {
          */
         public WriteRequest withInterpolator(@NonNull TimeInterpolator interpolator) {
             checkNotNull(interpolator, "interpolator == null");
-            return new WriteRequest(text, avgTimePerChar, interpolator, new ArrayList<TimeInterpolator>(), animatorListener, pauseStrategy);
+            return new WriteRequest(text, avgTimePerChar, interpolator, null, animatorListener, pauseStrategy);
         }
 
         /**
@@ -142,7 +145,7 @@ public class TurriType {
          */
         public WriteRequest withWordInterpolatorList(@Size(min = 1) List<TimeInterpolator> wordInterpolatorList) {
             checkNotNull(wordInterpolatorList, "wordInterpolatorList == null");
-            if (wordInterpolatorList.size() > 0) {
+            if (wordInterpolatorList.size() <= 0) {
                 throw new IllegalArgumentException("wordInterpolatorList.size() must be > 0");
             }
             return new WriteRequest(text, avgTimePerChar, null, wordInterpolatorList, animatorListener, pauseStrategy);
@@ -150,12 +153,12 @@ public class TurriType {
 
 
         /**
-         * Convenient method for setting set of word interpolators and NaturalPauseStrategy
+         * Convenience method for setting set of word interpolators and NaturalPauseStrategy
          * to mimic random chaotic human-like tiping
          * @return new WriteRequest
          */
         public WriteRequest naturally() {
-            ArrayList<TimeInterpolator> naturalWordInterpolatorList = new ArrayList<>();
+            List<TimeInterpolator> naturalWordInterpolatorList = new ArrayList<>();
 
             naturalWordInterpolatorList.add(new AccelerateDecelerateInterpolator()); // This one works best so far
             naturalWordInterpolatorList.add(new DecelerateInterpolator());
@@ -163,11 +166,12 @@ public class TurriType {
             naturalWordInterpolatorList.add(new FastOutLinearInInterpolator());
             naturalWordInterpolatorList.add(new LinearInterpolator());
 
-            return this.setPauseStrategy(new NaturalPauseStrategy()).withWordInterpolatorList(naturalWordInterpolatorList);
+            return this.setPauseStrategy(new NaturalPauseStrategy())
+                                    .withWordInterpolatorList(naturalWordInterpolatorList);
         }
 
         /**
-         *
+         * Pause strategy is applied only in combination with wordInterpolator
          * @param pauseStrategy custom pause strategy to be used during the animation for brakes betwen words and sentences
          * @return new WriteRequest with your strategy
          */
@@ -178,12 +182,28 @@ public class TurriType {
         }
 
         /**
+         * Convenience method to directly specify TextView which will be wrapped to Writable
          * @param tv TextView where you want to put your text
          * @return new Animator created for your WriteRequest
          */
-        public Animator into(@NonNull TextView tv) {
+        public Animator into(@NonNull final TextView tv) {
             checkNotNull(tv, "tv == null");
-            return TypeAnimationFactory.create(this, tv);
+            return TypeAnimationFactory.create(this, new Writable() {
+                @Override
+                public void append(CharSequence text) {
+                    tv.append(text);
+                }
+            });
+        }
+
+        /**
+         *
+         * @param w Writable where you want to put your text
+         * @return new Animator created for your WriteRequest
+         */
+        public Animator into(@NonNull final Writable w) {
+            checkNotNull(w, "writable == null");
+            return TypeAnimationFactory.create(this, w);
         }
 
         @NonNull
@@ -203,6 +223,16 @@ public class TurriType {
 
     }
 
+    /**
+     * Abstraction layer to implement for components that wants to be written to
+     */
+    public interface Writable {
+        /**
+         * Append the specified text to the Writable component
+         * @param text to be appended
+         */
+        void append(CharSequence text);
+    }
 
     private static void checkNotNull(@Nullable Object object, String message) {
         if (object == null) {

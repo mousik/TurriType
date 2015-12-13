@@ -1,23 +1,178 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:layout_height="match_parent" android:paddingLeft="6dp"
+    android:paddingRight="6dp"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".sample.TypeActivity">
 
 
     <TextView
         android:id="@+id/text_view"
-        android:textSize="18sp"
+        android:textSize="15sp"
+        tools:text="@string/lorem_ipsum"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_alignEnd="@+id/end_btn"
         android:layout_alignParentStart="true"
-        android:layout_above="@+id/end_btn" />
+        android:layout_above="@+id/settings_layout"/>
+
+    <LinearLayout
+        android:id="@+id/settings_layout"
+        android:orientation="vertical"
+        android:animateLayoutChanges="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/end_btn">
+
+        <LinearLayout
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:text="Speed"
+                android:layout_marginRight="16dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <RadioGroup
+                android:id="@+id/speed_selection"
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <RadioButton
+                    android:id="@+id/speed_very_slow"
+                    android:text="VSlow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+                <RadioButton
+                    android:id="@+id/speed_slow"
+                    android:text="Slow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+                <RadioButton
+                    android:id="@+id/speed_normal"
+                    android:text="Normal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"/>
+
+                <RadioButton
+                    android:id="@+id/speed_fast"
+                    android:text="Fast"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <RadioButton
+                    android:id="@+id/speed_very_fast"
+                    android:text="VFast"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            </RadioGroup>
+
+        </LinearLayout>
+
+
+        <Switch
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Natural preset"
+            android:id="@+id/is_naturally"
+            android:layout_alignParentStart="true"
+            android:layout_toStartOf="@+id/resume_btn"
+            android:layout_above="@+id/start_btn"
+            android:layout_alignTop="@+id/resume_btn"
+            android:checked="false"
+            android:layout_marginBottom="12dp" />
+
+        <LinearLayout
+            android:id="@+id/detail_settings"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_weight="0.5"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:text="Pause Strategy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <RadioGroup
+                    android:id="@+id/pause_strategy_selection"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <RadioButton
+                        android:id="@+id/strategy_node"
+                        android:text="None"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="true"/>
+                    <RadioButton
+                        android:id="@+id/strategy_linear"
+                        android:text="Linear"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                    <RadioButton
+                        android:id="@+id/strategy_natural"
+                        android:text="Natural"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                </RadioGroup>
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_weight="0.5"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:text="Interpolator"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <RadioGroup
+                    android:id="@+id/interpolator_selection"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <RadioButton
+                        android:id="@+id/interpolator_one"
+                        android:text="One(whole text)"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="true"/>
+                    <RadioButton
+                        android:id="@+id/interpolator_multiple"
+                        android:text="Multiple(every word)"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                </RadioGroup>
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+
+
+    </LinearLayout>
+
 
     <Button
+        style="?android:buttonStyleSmall"
+
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Start"
@@ -26,48 +181,41 @@
         android:layout_alignParentStart="true" />
 
     <Button
+        style="?android:buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="pause"
         android:id="@+id/pause_btn"
-        android:layout_alignBottom="@+id/start_btn"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignTop="@+id/start_btn"
+        android:layout_toEndOf="@+id/start_btn"/>
 
 
     <Button
+        style="?android:buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Cancel"
         android:id="@+id/cancel_btn"
-        android:layout_alignBottom="@+id/pause_btn"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignTop="@+id/resume_btn"
+        android:layout_toEndOf="@+id/resume_btn"/>
 
     <Button
+        style="?android:buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="end"
         android:id="@+id/end_btn"
-        android:layout_above="@+id/cancel_btn"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignTop="@+id/cancel_btn"
+        android:layout_alignParentEnd="true"
+        android:layout_toEndOf="@+id/cancel_btn"/>
 
     <Button
+        style="?android:buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="resume"
         android:id="@+id/resume_btn"
-        android:layout_above="@+id/pause_btn"
-        android:layout_alignEnd="@+id/pause_btn" />
-
-    <Switch
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Naturally"
-        android:id="@+id/is_naturally"
-        android:layout_alignParentStart="true"
-        android:layout_toStartOf="@+id/resume_btn"
-        android:layout_above="@+id/start_btn"
-        android:layout_alignTop="@+id/resume_btn"
-        android:checked="false"
-        android:layout_marginRight="12dp" />
+        android:layout_alignParentBottom="true"
+        android:layout_toEndOf="@+id/pause_btn"/>
 
 </RelativeLayout>
